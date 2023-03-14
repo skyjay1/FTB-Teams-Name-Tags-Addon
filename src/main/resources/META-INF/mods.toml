@@ -1,0 +1,25 @@
+modLoader="javafml"
+loaderVersion="[43,)"
+license="GNU LGPLv3"
+
+[[mods]]
+    modId="ftb_teams_nametag_addon"
+    version="19.2.0.1"
+    displayName="FTB Teams Nametag Addon"
+    credits=""
+    authors="skyjay1"
+    description='''Addon to FTB Teams to show and hide player names'''
+
+[[dependencies.ftb_teams_nametag_addon]]
+    modId="forge"
+    mandatory=true
+    versionRange="[43.2,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.ftb_teams_nametag_addon]]
+    modId="ftbteams"
+    mandatory=true
+    versionRange="[1902.2.12-build.95,)"
+    ordering="NONE"
+    side="BOTH"
