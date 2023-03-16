@@ -9,6 +9,9 @@ public class FTNAConfig {
     public final ForgeConfigSpec.BooleanValue REQUIRE_LINE_OF_SIGHT;
     public final ForgeConfigSpec.IntValue SHOW_TEAMMATE_DISTANCE;
     public final ForgeConfigSpec.BooleanValue SHOW_INVISIBLE_PLAYERS;
+    public final ForgeConfigSpec.BooleanValue SHOW_TEAM_NAME;
+    public final ForgeConfigSpec.BooleanValue HIDE_ON_SNEAK;
+    public final ForgeConfigSpec.BooleanValue RENDER_FOR_SELF;
 
     public FTNAConfig(final ForgeConfigSpec.Builder builder) {
 
@@ -29,6 +32,15 @@ public class FTNAConfig {
         SHOW_INVISIBLE_PLAYERS = builder
                 .comment("When true, looking directly at an invisible player shows their name tag")
                 .define("show_invisible_players", true);
+        SHOW_TEAM_NAME = builder
+                .comment("When true, the team name is shown beside the player's nametag")
+                .define("show_team_name", true);
+        HIDE_ON_SNEAK = builder
+                .comment("When true, the nametag color bar is hidden when the player is sneaking")
+                .define("hide_on_sneak", true);
+        RENDER_FOR_SELF = builder
+                .comment("When true, the nametag is rendered for the player in their inventory and third person.")
+                .define("render_for_self", true);
 
         builder.pop();
     }
