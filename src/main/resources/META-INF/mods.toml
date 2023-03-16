@@ -4,7 +4,7 @@ license="GNU LGPLv3"
 
 [[mods]]
     modId="ftb_teams_nametag_addon"
-    version="19.2.0.1"
+    version="19.2.0.2"
     displayName="FTB Teams Nametag Addon"
     credits=""
     authors="skyjay1"
