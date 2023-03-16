@@ -18,6 +18,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -60,6 +62,7 @@ public class FTNAClientEvents {
             UUID targetTeam = null;
             // load current player
             final Player player = Minecraft.getInstance().player;
+            if(target == player && !FtbTeamsNametagAddon.CONFIG.RENDER_FOR_SELF.get()) return;
             UUID playerTeam = null;
             // check invisibility
             if(!FtbTeamsNametagAddon.CONFIG.SHOW_INVISIBLE_PLAYERS.get() && event.getEntity().isInvisibleTo(player)) {
@@ -112,6 +115,20 @@ public class FTNAClientEvents {
         Minecraft minecraft = Minecraft.getInstance();
         ClientTeam team;
         if(oManager.isPresent() && teamId != null && (team = oManager.get().getTeam(teamId)) != null) {
+            if(FtbTeamsNametagAddon.CONFIG.HIDE_ON_SNEAK.get()){
+                if(event.getEntity().isShiftKeyDown()){
+                    event.setResult(Event.Result.DENY);
+                    return;
+                }
+            }
+            if(FtbTeamsNametagAddon.CONFIG.SHOW_TEAM_NAME.get()){
+                MutableComponent name = team.getName().copy().withStyle(s->s.withColor(team.getColor()));
+                event.getPoseStack().pushPose();
+                event.getPoseStack().translate(0, 0.25f, 0);
+                event.setContent(name);
+                Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(event.getEntity()).renderNameTag(event.getEntity(), event.getOriginalContent(), event.getPoseStack(), event.getMultiBufferSource(), event.getPackedLight());
+                event.getPoseStack().popPose();
+            }
             // prepare pose stack
             event.getPoseStack().pushPose();
             // these transformations are copied from EntityRenderer#renderNameTag
@@ -125,11 +142,11 @@ public class FTNAClientEvents {
             PoseStack.Pose pose = event.getPoseStack().last();
             Matrix4f matrix4f = pose.pose();
             final float width = 1 + minecraft.font.width(event.getContent()) / 2.0F;
-            final int color = team.getColor() | 0xFF000000;
+            int color = team.getColor() | 0xFF000000;
             // prepare to draw quad
             RenderSystem.disableBlend();
+            RenderSystem.enableDepthTest();
             RenderSystem.defaultBlendFunc();
-            RenderSystem.disableDepthTest();
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             // draw quad
@@ -150,7 +167,7 @@ public class FTNAClientEvents {
                     .endVertex();
             // finish rendering
             tesselator.end();
-            RenderSystem.enableDepthTest();
+            RenderSystem.disableBlend();
 
             event.getPoseStack().popPose();
         }
